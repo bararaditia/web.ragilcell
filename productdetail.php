@@ -76,6 +76,29 @@ if (count($related_products) < 8) {
 }
 ?>
 
+<?php
+// Memulai session untuk menyimpan data pengguna
+session_start();
+
+// Koneksi ke database
+include 'admin/db_connect.php';
+
+// Ambil ID produk dari URL (misalnya dari parameter GET)
+$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+
+// Query untuk mengambil detail produk berdasarkan ID
+$sql = "SELECT * FROM products WHERE id = ?";
+$stmt = $conn->prepare($sql);
+$stmt->bind_param("i", $product_id);
+$stmt->execute();
+$product = $stmt->get_result()->fetch_assoc();
+$stmt->close();
+
+// Tampilkan produk (judul, deskripsi, dll.) di sini
+echo "<h1>" . $product['product_name'] . "</h1>";
+echo "<p>" . $product['description'] . "</p>";
+?>
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -256,36 +279,57 @@ if (count($related_products) < 8) {
     <div id="review-section" class="container">
         <h2 class="font-weight-bold">Product Reviews</h2>
         <hr>
-        <div id="reviews">
-            <!-- Review Item -->
-            <div class="review-item my-4">
-                <h5><strong>John Doe</strong> <span class="text-muted">- August 30, 2024</span></h5>
-                <div class="rating">
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star"></i>
-                    <i class="fa-solid fa-star-half-alt"></i>
-                </div>
-                <p>Amazing product! Totally worth the price.</p>
+        <div class="comment-section">
+    <h3>Tambahkan Komentar</h3>
+    <?php if(isset($_SESSION['user_id'])): ?>
+        <!-- Jika sudah login, tampilkan form komentar -->
+        <form action="submit_comment.php" method="POST">
+            <input type="hidden" name="product_id" value="<?php echo $product_id; ?>">
+            <input type="hidden" name="user_id" value="<?php echo $_SESSION['user_id']; ?>">
+            
+            <div class="form-group">
+                <label for="name">Nama:</label>
+                <input type="text" id="name" name="name" class="form-control" value="<?php echo $_SESSION['username']; ?>" readonly>
             </div>
-        </div>
-        
-        <!-- Review Form -->
-        <div class="review-form mt-5">
-            <h4 class="font-weight-bold">Add Your Review</h4>
-            <form id="review-form">
-                <div class="form-group">
-                    <label for="name">Your Name:</label>
-                    <input type="text" class="form-control" id="name" placeholder="Enter your name" required>
-                </div>
-                <div class="form-group">
-                    <label for="comment">Your Review:</label>
-                    <textarea class="form-control" id="comment" rows="4" placeholder="Write your review" required></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary">Submit Review</button>
-            </form>
-        </div>
+            
+            <div class="form-group">
+                <label for="comment">Komentar:</label>
+                <textarea id="comment" name="comment" class="form-control" rows="5" required></textarea>
+            </div>
+            
+            <button type="submit" class="btn btn-primary">Kirim Komentar</button>
+        </form>
+    <?php else: ?>
+        <!-- Jika belum login, arahkan ke halaman login -->
+        <p>Silakan <a href="signin.php">login</a> terlebih dahulu untuk memberikan komentar.</p>
+    <?php endif; ?>
+</div>
+
+<!-- Menampilkan komentar yang ada -->
+<div class="comment-list">
+    <h3>Komentar:</h3>
+    <?php
+    // Ambil komentar berdasarkan ID produk
+    $sql_comments = "SELECT c.comment, u.username, c.created_at FROM comments c JOIN user u ON c.user_id = u.id WHERE c.product_id = ? ORDER BY c.created_at DESC";
+    $stmt_comments = $conn->prepare($sql_comments);
+    $stmt_comments->bind_param("i", $product_id);
+    $stmt_comments->execute();
+    $comments = $stmt_comments->get_result();
+
+    if ($comments->num_rows > 0) {
+        while ($row = $comments->fetch_assoc()) {
+            echo "<div class='comment-item'>";
+            echo "<strong>" . $row['username'] . "</strong>";
+            echo "<p>" . $row['comment'] . "</p>";
+            echo "<small>" . $row['created_at'] . "</small>";
+            echo "</div>";
+        }
+    } else {
+        echo "<p>Belum ada komentar.</p>";
+    }
+    $stmt_comments->close();
+    ?>
+</div>
     </div>
 
     <!-- RELATED PRODUCTS -->
