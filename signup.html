@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Ragil Cell - Sign Up</title>
+    <link rel="shortcut icon" type="image/x-icon" href="image/CEL.png">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.4.1/css/simple-line-icons.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<style>
+    body {
+        background-color: #fff;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
+    
+    .registration-form {
+        padding: 30px 0;
+        position: relative;
+    }
+    
+    .registration-form form {
+        background-color: #fff;
+        min-width: 400px; /* Lebar form diperbesar */
+        margin: auto;
+        padding: 20px 30px;
+        border-top-left-radius: 20px;
+        border-top-right-radius: 20px;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.100);
+    }
+    
+    .registration-form .form-icon {
+        text-align: center;
+        background-color: #222222;
+        border-radius: 50%;
+        color: white;
+        width: 80px;
+        height: 80px;
+        margin: auto;
+        margin-bottom: 30px;
+        line-height: 80px;
+    }
+    
+    .registration-form .form-icon img {
+        width: 50px;
+        height: auto;
+    }
+    
+    .registration-form .item {
+        border-radius: 10px;
+        margin-bottom: 15px;
+        padding: 8px 15px;
+    }
+    
+    .registration-form .create-account {
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-size: 16px;
+        font-weight: bold;
+        background-color: #DB1313;
+        border: none;
+        color: white;
+        margin-top: 10px;
+    }
+    
+    .registration-form .social-media {
+        max-width: 700px; /* Lebar social media juga mengikuti form */
+        background-color: #fff;
+        margin: auto;
+        padding: 10px 0;
+        text-align: center;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+        color: #222222;
+        border-top: 1px solid #dee9ff;
+        box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.075);
+    }
+    
+    .registration-form .social-icons {
+        margin-top: 20px;
+        margin-bottom: 16px;
+    }
+    
+    .registration-form .social-icons a {
+        font-size: 10px;
+        margin: 0 3px;
+        color: #222222;
+        border: 1px solid;
+        border-radius: 50%;
+        width: 40px;
+        display: inline-block;
+        height: 40px;
+        text-align: center;
+        background-color: #fff;
+        line-height: 40px;
+    }
+    
+    .registration-form .social-icons a:hover {
+        text-decoration: none;
+        opacity: 0.6;
+    }
+    
+    .registration-form .social-media h6, span{
+        font-size: 15px;
+    }
+    
+    .registration-form .close-icon {
+        position: absolute;
+        padding: 20px;
+        top: 15px;
+        right: 0px;
+        color: #0a0a0a;
+        font-size: 25px;
+        cursor: pointer;
+    }
+    
+    @media (max-width: 576px) {
+        .registration-form form {
+            padding: 20px 15px;
+        }
+    
+        .registration-form .form-icon {
+            width: 60px;
+            height: 60px;
+            font-size: 25px;
+            line-height: 60px;
+        }
+    
+        .registration-form .close-icon {
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+        }
+    }    
+</style>
+<body>
+    <div class="registration-form">
+        <span id="close" class="close-icon" onclick="window.history.back();">&times;</span>
+        <form id="registrationForm" action="register_user.php" method="POST">
+            <div class="form-icon">
+                <img src="image/CEL.png" alt="">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control item" id="username" name="username" placeholder="Username" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control item" id="email" name="email" placeholder="Email" required>
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control item" id="password" name="password" placeholder="Password" minlength="8" required>
+                <small class="form-text text-muted">Minimum 8 characters</small>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control item" id="phone-number" name="phone_number" placeholder="Phone Number" required>
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control item" id="address" name="address" placeholder="Address" required>
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-block create-account">SIGN UP</button>
+            </div>
+        </form>
+        
+        <div class="social-media">
+            <h6>Did you have an account?<a href="signin.html"><span> Sign In</span></a></h6>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script>
+        // Validasi JavaScript tambahan
+        document.getElementById('registrationForm').addEventListener('submit', function(event) {
+            var password = document.getElementById('password').value;
+            if (password.length < 8) {
+                alert('Password harus minimal 8 karakter');
+                event.preventDefault(); // Mencegah form dikirim
+            }
+        });
+    </script>
+</body>
+</html>
